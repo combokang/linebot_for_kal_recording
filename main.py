@@ -1,20 +1,20 @@
-# 載入需要的模組
-import os
-import sys
-from argparse import ArgumentParser
-from flask import Flask, request, abort
-from flask.logging import create_logger
-from linebot import LineBotApi, WebhookHandler
-from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage, FlexSendMessage
-import configparser
-import psycopg2
-import def_search_food
-import def_add_food
-import def_newday
-import def_search_kalleft
-import def_add_profile
 import count_tdee
+import def_add_profile
+import def_search_kalleft
+import def_newday
+import def_add_food
+import def_search_food
+import psycopg2
+import configparser
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, FlexSendMessage
+from linebot.exceptions import InvalidSignatureError
+from linebot import LineBotApi, WebhookHandler
+from flask.logging import create_logger
+from flask import Flask, request, abort
+from argparse import ArgumentParser
+import sys
+import os
+# 載入需要的模組
 
 # 設定應用程式
 app = Flask(__name__)
@@ -34,6 +34,8 @@ def hello():
 
 
 # callback路由，和line連線
+
+
 @ app.route("/callback", methods=["POST"])
 def callback():
     signature = request.headers["X-Line-Signature"]
@@ -180,6 +182,7 @@ if __name__ == "__main__":
     )
     arg_parser.add_argument("-p", "--port", default=8000, help="port")
     arg_parser.add_argument("-d", "--debug", default=False, help="debug")
+
     options = arg_parser.parse_args()
 
     app.run(debug=options.debug, port=options.port)
