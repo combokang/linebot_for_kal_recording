@@ -59,10 +59,9 @@ def message_text(event):
     user_id = event.source.user_id
 
     # 開啟資料庫連線
-
-    DATABASE_URL = os.popen("heroku config:get DATABASE_URL -a linebotforkal").read()[
-        :-1
-    ]
+    DATABASE_URL = os.environ["DATABASE_URL"]
+    # DATABASE_URL = os.popen(
+    #     "heroku config:get DATABASE_URL -a linebotforkal").read()[:-1]
 
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
 
