@@ -108,7 +108,7 @@ def food_kal(line_bot_api, conn, event, user_id, text, status):
 
 # 定義涵式：確認是否建立
 def confirm(line_bot_api, conn, event, user_id, text, status):
-    if text == "[建立食物並扣除]":
+    if text == "[建立食物並紀錄]":
         cursor = conn.cursor()
         SQL_order = f'''
         SELECT food_name, unit, kal from activities where userid = '{user_id}';

@@ -7,7 +7,7 @@ def confirm_json(unit_result, food_name_result, kal_result):
             "contents": [
                 {
                     "type": "text",
-                    "text": f"每{unit_result}{food_name_result}含有{kal_result}卡的熱量，確定要把這餐的熱量紀錄下來嗎？",
+                    "text": f"每{unit_result}{food_name_result}含有{kal_result}卡的熱量，確定要把這餐的熱量攝取紀錄下來嗎？",
                     "wrap": True,
                     "color": "#000000"
                 }
@@ -21,7 +21,7 @@ def confirm_json(unit_result, food_name_result, kal_result):
                     "type": "button",
                     "action": {
                         "type": "message",
-                        "label": "確定",
+                        "label": "確定紀錄在本日攝取的熱量中",
                         "text": "[確定紀錄]"
                     },
                     "height": "sm"
@@ -30,7 +30,7 @@ def confirm_json(unit_result, food_name_result, kal_result):
                     "type": "button",
                     "action": {
                         "type": "message",
-                        "label": "取消",
+                        "label": "我不想紀錄了",
                         "text": "[取消紀錄]"
                     },
                     "height": "sm"
