@@ -78,37 +78,40 @@ def food_unit(line_bot_api, conn, event, user_id, text, status):
 
 # 定義涵式：定義熱量
 def food_kal(line_bot_api, conn, event, user_id, text, status):
-    # 還沒排除負數
     try:
         kal = float(text)
-        cursor = conn.cursor()
-        SQL_order = f'''
-        UPDATE activities set kal = {kal} where userid = '{user_id}';
-        UPDATE userinfo set status = '確認是否建立' where userid = '{user_id}';
-        '''
-        cursor.execute(SQL_order)
-        conn.commit()
-        print("SQL更新activities表與userinfo狀態:確認是否建立 成功")
-        SQL_order = f'''
-        SELECT food_name, unit, kal from activities where userid = '{user_id}';
-        '''
-        cursor.execute(SQL_order)
-        [food_name_add, unit_add, kal_add] = cursor.fetchone()
-        cursor.close()
-        FlexMessage = flex_add_confirm.confirm_json(
-            unit_add, food_name_add, kal_add)
-        line_bot_api.reply_message(
-            event.reply_token,
-            FlexSendMessage('search_confirm', FlexMessage)
-        )
+        if kal > 0:
+            cursor = conn.cursor()
+            SQL_order = f'''
+            UPDATE activities set kal = {kal} where userid = '{user_id}';
+            UPDATE userinfo set status = '確認是否建立' where userid = '{user_id}';
+            '''
+            cursor.execute(SQL_order)
+            conn.commit()
+            print("SQL更新activities表與userinfo狀態:確認是否建立 成功")
+            SQL_order = f'''
+            SELECT food_name, unit, kal from activities where userid = '{user_id}';
+            '''
+            cursor.execute(SQL_order)
+            [food_name_add, unit_add, kal_add] = cursor.fetchone()
+            cursor.close()
+            FlexMessage = flex_add_confirm.confirm_json(
+                unit_add, food_name_add, kal_add)
+            line_bot_api.reply_message(
+                event.reply_token,
+                FlexSendMessage('search_confirm', FlexMessage)
+            )
+        else:
+            line_bot_api.reply_message(
+                event.reply_token, TextSendMessage(text="請輸入正值！"))
     except ValueError:
         line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text="請輸入數值"))
+            event.reply_token, TextSendMessage(text="請輸入數值！"))
 
 
 # 定義涵式：確認是否建立
 def confirm(line_bot_api, conn, event, user_id, text, status):
-    if text == "[建立食物並紀錄]":
+    if text == "[建立食物並扣除]":
         cursor = conn.cursor()
         SQL_order = f'''
         SELECT food_name, unit, kal from activities where userid = '{user_id}';
@@ -170,14 +173,17 @@ def confirm(line_bot_api, conn, event, user_id, text, status):
         cursor.close()
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text="食物資料建立成功！"))
-    if text == "[取消建立]":
-        cursor = conn.cursor()
-        SQL_order = f'''
-        UPDATE userinfo set status = '建立失敗' where userid = '{user_id}';
-        '''
-        cursor.execute(SQL_order)
-        conn.commit()
-        print("SQL更新userinfo狀態:建立失敗 成功")
-        cursor.close()
-        line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text="已取消建立食物資料"))
+
+
+# 取消建立
+def cancel(line_bot_api, conn, event, user_id, text, status):
+    cursor = conn.cursor()
+    SQL_order = f'''
+    UPDATE userinfo set status = '建立失敗' where userid = '{user_id}';
+    '''
+    cursor.execute(SQL_order)
+    conn.commit()
+    print("SQL更新userinfo狀態:建立失敗 成功")
+    cursor.close()
+    line_bot_api.reply_message(
+        event.reply_token, TextSendMessage(text="已取消建立食物資料"))

@@ -60,7 +60,7 @@ def search_food(line_bot_api, conn, event, user_id, text, status):
         cursor.close()
         FlexMessage = json.load(open("flex_cant_find.json", "r", encoding="utf-8"))
         line_bot_api.reply_message(
-            event.reply_token, FlexSendMessage("cant_find", FlexMessage)
+            event.reply_token, FlexSendMessage("找不到相符的食物QQ", FlexMessage)
         )
     else:
         # 更新使用者搜尋狀態為搜尋成功
@@ -77,7 +77,7 @@ def search_food(line_bot_api, conn, event, user_id, text, status):
             unit_result, food_name_result, kal_result
         )
         line_bot_api.reply_message(
-            event.reply_token, FlexSendMessage("search_confirm", FlexMessage)
+            event.reply_token, FlexSendMessage("請確認是否紀錄", FlexMessage)
         )
 
 
@@ -124,37 +124,41 @@ def cancel(line_bot_api, conn, event, user_id, text, status):
 
 
 def quantity_record(line_bot_api, conn, event, user_id, text, status):
-    # 還沒排除負數
     try:
         quantity = float(text)
-        cursor = conn.cursor()
-        SQL_order = f"""
-        select kal from activities where userid = '{user_id}';
-        """
-        cursor.execute(SQL_order)
-        kal_result = cursor.fetchone()[0]
-        print(f"SQL搜詢成功，kal: {kal_result}")
-        total_kal = kal_result * quantity
-        SQL_order = f"""
-        update userinfo set today_kal_left = today_kal_left - {total_kal},status = '紀錄成功' 
-        where userid = '{user_id}';
-        select today_kal_left from userinfo where userid = '{user_id}';
-        """
-        cursor.execute(SQL_order)
-        conn.commit()
-        print("SQL更新userinfo狀態:紀錄成功 成功")
-        today_kal_left = cursor.fetchone()[0]
-        cursor.close()
-        if today_kal_left >= 0:
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text=f"已成功紀錄熱量，您今日的熱量扣打剩餘{today_kal_left}卡"),
-            )
+        if quantity > 0:
+            cursor = conn.cursor()
+            SQL_order = f"""
+            select kal from activities where userid = '{user_id}';
+            """
+            cursor.execute(SQL_order)
+            kal_result = cursor.fetchone()[0]
+            print(f"SQL搜詢成功，kal: {kal_result}")
+            total_kal = kal_result * quantity
+            SQL_order = f"""
+            update userinfo set today_kal_left = today_kal_left - {total_kal},status = '紀錄成功' 
+            where userid = '{user_id}';
+            select today_kal_left from userinfo where userid = '{user_id}';
+            """
+            cursor.execute(SQL_order)
+            conn.commit()
+            print("SQL更新userinfo狀態:紀錄成功 成功")
+            today_kal_left = cursor.fetchone()[0]
+            cursor.close()
+            if today_kal_left >= 0:
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(text=f"已成功紀錄熱量，您今日的熱量扣打剩餘{today_kal_left}卡"),
+                )
+            else:
+                kal_exceed = 0 - today_kal_left
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(text=f"已成功紀錄熱量，您已超過預定熱量上限{kal_exceed}卡了，不行再吃囉！"),
+                )
         else:
-            kal_exceed = 0 - today_kal_left
             line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text=f"已成功紀錄熱量，您已超過預定熱量上限{kal_exceed}卡了，不行再吃囉！"),
+                event.reply_token, TextSendMessage(text="請輸入正值！")
             )
     except ValueError:
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="請輸入數值"))
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="請輸入數值！"))

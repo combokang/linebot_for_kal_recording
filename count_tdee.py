@@ -17,7 +17,6 @@ user_id:                使用者ID
 text:                   使用者輸入內容
 status                  使用者搜尋狀態
 tdee                    紀錄tdee
-
 """
 
 # 計算 tdee
