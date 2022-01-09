@@ -81,6 +81,7 @@ def search_food(line_bot_api, conn, event, user_id, text, status):
 
 
 # 定義涵式：確定紀錄
+
 def confirm(line_bot_api, conn, event, user_id, text, status):
     cursor = conn.cursor()
     SQL_order = f'''
@@ -107,8 +108,9 @@ def cancel(line_bot_api, conn, event, user_id, text, status):
     line_bot_api.reply_message(
         event.reply_token, TextSendMessage(text="已取消紀錄熱量"))
 
-
 # 定義涵式：紀錄數量
+
+
 def quantity_record(line_bot_api, conn, event, user_id, text, status):
     # 還沒排除負數
     try:
