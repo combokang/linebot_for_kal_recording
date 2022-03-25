@@ -26,7 +26,7 @@ def confirm_json(unit_add, food_name_add, kal_add):
                 },
                 {
                     "type": "text",
-                    "text": f"熱量：{kal_add} 卡",
+                    "text": f"熱量：{kal_add} 大卡",
                     "margin": "md"
                 },
                 {

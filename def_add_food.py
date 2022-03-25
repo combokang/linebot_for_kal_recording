@@ -72,7 +72,7 @@ def food_unit(line_bot_api, conn, event, user_id, text, status):
     # 回傳訊息
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text="請輸入每單位食物的熱量(卡數)，如100、200等等")
+        TextSendMessage(text="請輸入每單位食物的熱量(大卡數)，如100、200等等")
     )
 
 

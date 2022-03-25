@@ -37,21 +37,19 @@ def newday(line_bot_api, conn, event, user_id):
     TDEE = cursor.fetchone()[0]
     print(f"TDEE取得 {TDEE}")
 
-    
     SQL_order = f'''
     update userinfo set today_kal_left = {TDEE} where userid = '{user_id}';
     '''
     cursor.execute(SQL_order)
     print("更新每日熱量")
-    
-    
+
     conn.commit()
     cursor.close()
     # 回傳訊息
     if yesterday_kal_left > 0:
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=f"您今日的熱量扣打其實還有{yesterday_kal_left}卡，不過就在剛剛都幫你重置啦！新的一天又開始囉"))
+            TextSendMessage(text=f"您今日的熱量扣打其實還有{yesterday_kal_left}大卡，不過就在剛剛都幫你重置啦！新的一天又開始囉"))
     elif yesterday_kal_left == 0:
         line_bot_api.reply_message(
             event.reply_token,
@@ -60,5 +58,4 @@ def newday(line_bot_api, conn, event, user_id):
         kal_exceed = 0 - yesterday_kal_left
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=f"您的熱量扣打已重置，不過您今天超過預定熱量上限{kal_exceed}卡了，新的一天要再加油！"))
-
+            TextSendMessage(text=f"您的熱量扣打已重置，不過您今天超過預定熱量上限{kal_exceed}大卡了，新的一天要再加油！"))

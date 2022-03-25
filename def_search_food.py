@@ -32,7 +32,8 @@ def kal_record(line_bot_api, conn, event, user_id, text, status):
     print("SQL更新userinfo狀態:輸入關鍵字 成功")
     cursor.close()
     # 回傳訊息
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text="請輸入食物名稱"))
+    line_bot_api.reply_message(
+        event.reply_token, TextSendMessage(text="請輸入食物名稱"))
 
 
 # 定義涵式：輸入關鍵字
@@ -58,7 +59,8 @@ def search_food(line_bot_api, conn, event, user_id, text, status):
         conn.commit()
         print("SQL更新userinfo狀態:紀錄失敗 成功")
         cursor.close()
-        FlexMessage = json.load(open("flex_cant_find.json", "r", encoding="utf-8"))
+        FlexMessage = json.load(
+            open("flex_cant_find.json", "r", encoding="utf-8"))
         line_bot_api.reply_message(
             event.reply_token, FlexSendMessage("找不到相符的食物QQ", FlexMessage)
         )
@@ -91,7 +93,8 @@ def confirm(line_bot_api, conn, event, user_id, text, status):
     conn.commit()
     print("SQL更新userinfo狀態:輸入數量 成功")
     cursor.close()
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text="請輸入食物數量"))
+    line_bot_api.reply_message(
+        event.reply_token, TextSendMessage(text="請輸入食物數量"))
 
 
 # 定義涵式：取消紀錄
@@ -104,7 +107,8 @@ def cancel(line_bot_api, conn, event, user_id, text, status):
     conn.commit()
     print("SQL更新userinfo狀態:紀錄失敗 成功")
     cursor.close()
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text="已取消紀錄熱量"))
+    line_bot_api.reply_message(
+        event.reply_token, TextSendMessage(text="已取消紀錄熱量"))
 
 
 # 定義涵式：取消紀錄
@@ -117,7 +121,8 @@ def cancel(line_bot_api, conn, event, user_id, text, status):
     conn.commit()
     print("SQL更新userinfo狀態:紀錄失敗 成功")
     cursor.close()
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text="已取消紀錄熱量"))
+    line_bot_api.reply_message(
+        event.reply_token, TextSendMessage(text="已取消紀錄熱量"))
 
 
 # 定義涵式：紀錄數量
@@ -148,17 +153,20 @@ def quantity_record(line_bot_api, conn, event, user_id, text, status):
             if today_kal_left >= 0:
                 line_bot_api.reply_message(
                     event.reply_token,
-                    TextSendMessage(text=f"已成功紀錄熱量，您今日的熱量扣打剩餘{today_kal_left}卡"),
+                    TextSendMessage(
+                        text=f"已成功紀錄熱量，您今日的熱量扣打剩餘{today_kal_left}大卡"),
                 )
             else:
                 kal_exceed = 0 - today_kal_left
                 line_bot_api.reply_message(
                     event.reply_token,
-                    TextSendMessage(text=f"已成功紀錄熱量，您已超過預定熱量上限{kal_exceed}卡了，不行再吃囉！"),
+                    TextSendMessage(
+                        text=f"已成功紀錄熱量，您已超過預定熱量上限{kal_exceed}大卡了，不行再吃囉！"),
                 )
         else:
             line_bot_api.reply_message(
                 event.reply_token, TextSendMessage(text="請輸入正值！")
             )
     except ValueError:
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="請輸入數值！"))
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text="請輸入數值！"))

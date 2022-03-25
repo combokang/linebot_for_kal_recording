@@ -7,7 +7,7 @@ def confirm_json(unit_result, food_name_result, kal_result):
             "contents": [
                 {
                     "type": "text",
-                    "text": f"每{unit_result}{food_name_result}含有{kal_result}卡的熱量，確定要把這餐的熱量紀錄下來嗎？",
+                    "text": f"每{unit_result}{food_name_result}含有{kal_result}大卡的熱量，確定要把這餐的熱量紀錄下來嗎？",
                     "wrap": True,
                     "color": "#000000"
                 }
